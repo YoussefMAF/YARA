@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chatbot</title>
+</head>
+<body>
+  <h2>Simple Chat</h2>
+  <ul id="messages"></ul>
+  <input id="input" autocomplete="off" /><button onclick="send()">Send</button>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    function send() {
+      const input = document.getElementById("input");
+      const message = input.value;
+      if (message.trim()) {
+        appendMessage(`You: ${message}`);
+        socket.emit("userMessage", message);
+        input.value = "";
+      }
+    }
+
+    socket.on("botMessage", (msg) => {
+      appendMessage(`Bot: ${msg}`);
+    });
+
+    function appendMessage(text) {
+      const li = document.createElement("li");
+      li.textContent = text;
+      document.getElementById("messages").appendChild(li);
+    }
+  </script>
+</body>
+</html>
