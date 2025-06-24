@@ -1,38 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chatbot</title>
-</head>
-<body>
-  <h2>Simple Chat</h2>
-  <ul id="messages"></ul>
-  <input id="input" autocomplete="off" /><button onclick="send()">Send</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChatBot</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="chat-container">
+      <header class="chat-header">
+        <h2>Simple ChatBot</h2>
+      </header>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
+      <ul id="messages" class="chat-messages"></ul>
 
-    function send() {
-      const input = document.getElementById("input");
-      const message = input.value;
-      if (message.trim()) {
-        appendMessage(`You: ${message}`);
-        socket.emit("userMessage", message);
-        input.value = "";
+      <div class="chat-input-area">
+        <input
+          id="input"
+          type="text"
+          placeholder="Type a message..."
+          autocomplete="off"
+        />
+        <button onclick="send()" class="send-button">Send</button>
+      </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      function send() {
+        const input = document.getElementById("input");
+        const message = input.value;
+        if (message.trim()) {
+          appendMessage("You", message);
+          socket.emit("userMessage", message);
+          input.value = "";
+        }
       }
-    }
 
-    socket.on("botMessage", (msg) => {
-      appendMessage(`Bot: ${msg}`);
-    });
+      socket.on("botMessage", (msg) => {
+        appendMessage("Bot", msg);
+      });
 
-    function appendMessage(text) {
-      const li = document.createElement("li");
-      li.textContent = text;
-      document.getElementById("messages").appendChild(li);
-    }
-  </script>
-</body>
+      function appendMessage(sender, text) {
+        const li = document.createElement("li");
+        li.className = sender === "You" ? "message user" : "message bot";
+        li.innerHTML = `<strong>${sender}:</strong> ${text}`;
+        document.getElementById("messages").appendChild(li);
+        li.scrollIntoView({ behavior: "smooth" });
+      }
+    </script>
+  </body>
 </html>
