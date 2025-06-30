@@ -5,6 +5,61 @@ import "bootstrap/dist/css/bootstrap.min.css";
 //address of backend server
 const SOCKET_SERVER_URL = "http://localhost:3001";
 
+//display title
+function Header() {
+  return <h2 className="text-center mb-4"> YARA - Movie Night Planner</h2>;
+}
+
+//colouring based on sender
+function Message({ sender, text }) {
+  return (
+    <div
+      className={`p-2 mb-2 rounded ${
+        sender === "user" ? "bg-primary text-white text-end" : "bg-light text-start"
+      }`}
+    >
+      {text}
+    </div>
+  );
+}
+
+//chat window
+function ChatWindow({ chatHistory }) {
+  return (
+    <div
+      className="border rounded p-3 mb-3"
+      style={{ height: "60vh", overflowY: "auto", backgroundColor: "#f8f9fa" }}
+    >
+      {chatHistory.length === 0 ? (
+        <p className="text-muted text-center">No messages yet. Start the conversation!</p>
+      ) : (
+        chatHistory.map((msg, i) => (
+          <Message key={`msg-${i}`} sender={msg.sender} text={msg.text} />
+        ))
+      )}
+    </div>
+  );
+}
+
+//input area
+function InputArea({ userInput, setUserInput, sendMessage }) {
+  return (
+    <div className="input-group">
+      <input
+        type="text"
+        className="form-control"
+        value={userInput}
+        onChange={(e) => setUserInput(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+        placeholder="Type your message..."
+      />
+      <button className="btn btn-primary" onClick={sendMessage}>
+        Send
+      </button>
+    </div>
+  );
+}
+
 //set up of chat state and socket connection
 export default function App() {
   const [chatHistory, updateChatHistory] = useState([]);
@@ -50,47 +105,19 @@ export default function App() {
   };
 
   //chat window
-
   return (
     <div className="container mt-4">
-      <h2 className="text-center mb-4"> YARA - Movie Night Planner</h2>
+      <Header />
 
-      <div
-        className="border rounded p-3 mb-3"
-        style={{ height: "60vh", overflowY: "auto", backgroundColor: "#f8f9fa" }}
-      >
-        {chatHistory.length === 0 ? (
-          <p className="text-muted text-center">No messages yet. Start the conversation!</p>
-        ) : (
-          chatHistory.map((msg, i) => (
-            <div
-              key={`msg-${i}`}
-              className={`p-2 mb-2 rounded ${
-                msg.sender === "user" ? "bg-primary text-white text-end" : "bg-light text-start"
-              }`}
-            >
-              {msg.text}
+      {
+      <ChatWindow chatHistory={chatHistory} />}
 
-            </div>
-          ))
-        )}
-      </div>
-      
-      {/*input area*/}
-      
-      <div className="input-group">
-        <input
-          type="text"
-          className="form-control"
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-          placeholder="Type your message..."
-        />
-        <button className="btn btn-primary" onClick={sendMessage}>
-          Send
-        </button>
-      </div>
+      {//input area
+      <InputArea
+        userInput={userInput}
+        setUserInput={setUserInput}
+        sendMessage={sendMessage}
+      />}
     </div>
   );
 }
