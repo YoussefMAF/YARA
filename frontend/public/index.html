@@ -1,55 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ChatBot</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Interactive Chatbot - A modern Q&A conversation interface"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="%PUBLIC_URL%/styles.css" />
+
+    <title>Interactive Chatbot</title>
   </head>
   <body>
-    <div class="chat-container">
-      <header class="chat-header">
-        <h2>Simple ChatBot</h2>
-      </header>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
 
-      <ul id="messages" class="chat-messages"></ul>
-
-      <div class="chat-input-area">
-        <input
-          id="input"
-          type="text"
-          placeholder="Type a message..."
-          autocomplete="off"
-        />
-        <button onclick="send()" class="send-button">Send</button>
-      </div>
-    </div>
-
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-      const socket = io();
-
-      function send() {
-        const input = document.getElementById("input");
-        const message = input.value;
-        if (message.trim()) {
-          appendMessage("You", message);
-          socket.emit("userMessage", message);
-          input.value = "";
-        }
-      }
-
-      socket.on("botMessage", (msg) => {
-        appendMessage("Bot", msg);
-      });
-
-      function appendMessage(sender, text) {
-        const li = document.createElement("li");
-        li.className = sender === "You" ? "message user" : "message bot";
-        li.innerHTML = `<strong>${sender}:</strong> ${text}`;
-        document.getElementById("messages").appendChild(li);
-        li.scrollIntoView({ behavior: "smooth" });
-      }
-    </script>
+    <!-- Bootstrap 5 JS Bundle -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>
