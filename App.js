@@ -24,22 +24,18 @@ function Message({ sender, text }) {
 }
 
 //chat window
-function ChatWindow({ chatHistory }) {
-  return (
-    <div
-      className="border rounded p-3 mb-3"
-      style={{ height: "60vh", overflowY: "auto", backgroundColor: "#f8f9fa" }}
-    >
-      {chatHistory.length === 0 ? (
-        <p className="text-muted text-center">No messages yet. Start the conversation!</p>
-      ) : (
-        chatHistory.map((msg, i) => (
-          <Message key={`msg-${i}`} sender={msg.sender} text={msg.text} />
-        ))
-      )}
-    </div>
-  );
-}
+<div className="chat-window">
+  {chatHistory.length === 0 ? (
+    <p>No messages yet.</p>
+  ) : (
+    chatHistory.map((msg, i) => (
+      <div key={i}>
+        {msg.sender}: {msg.text}
+      </div>
+    ))
+  )}
+</div>
+
 
 //input area
 function InputArea({ userInput, setUserInput, sendMessage }) {
