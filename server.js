@@ -1,33 +1,36 @@
-//setup
-const { createServer } = require("http");
-const { Server } = require("socket.io");
 const express = require("express");
-
+const http = require("http");
+const { Server } = require("socket.io");
+const cors = require("cors");
 const app = express();
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
+const server = http.createServer(app);
+
+//create Socket.IO server
+const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000",
-    methods: ["GET", "POST"]
-  }
+    methods: ["GET", "POST"],
+  },
 });
 
-//handlers
+app.use(cors());
+
+//set up socket connection
 io.on("connection", (socket) => {
-  console.log("A user connected");
+  console.log("User connected:", socket.id);
 
   socket.on("user-message", (msg) => {
-    console.log("User said:", msg);
-    socket.emit("bot-message", `YARA: I heard you say "${msg}"!`);
+    console.log("Received:", msg);
+
   });
 
   socket.on("disconnect", () => {
-    console.log("User disconnected");
+    console.log("User disconnected:", socket.id);
   });
 });
 
-//run server
+//start server
 const PORT = 3001;
-httpServer.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
 });
