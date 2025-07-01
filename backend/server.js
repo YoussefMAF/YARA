@@ -2,29 +2,48 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
+const cors = require('cors');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
 
-const PORT = process.env.PORT || 3000;
+// Configure CORS for socket.io
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+});
+
+const PORT = process.env.PORT || 3001;
+
+// Enable CORS for Express
+app.use(cors());
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 let fallbackCount = 0;
 const MAX_FALLBACK = 3;
 
-app.use(express.static(path.join(__dirname, 'public')));
-
+// Socket.io connection handling
 io.on('connection', (socket) => {
   console.log('A user connected');
 
-  socket.on('userMessage', (msg) => {
+  socket.on('user-message', (msg) => {
     console.log('User:', msg);
-    socket.emit('botMessage', `You said: "${msg}"`);
+    socket.emit('bot-message', `You said: "${msg}"`);
   });
 
   socket.on('disconnect', () => {
     console.log('A user disconnected');
   });
+});
+
+// The "catchall" handler: for any request that doesn't match an API route,
+// send back React's index.html file.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
 });
 
 server.listen(PORT, () => {
@@ -45,7 +64,7 @@ function handleUserMessage(message) {
       fallbackCount = 0;
       return "I'm having trouble understanding. Let's start over — what's your name?";
     } else {
-      return "Hmm, I didn’t quite catch that. Could you rephrase?";
+      return "Hmm, I didn't quite catch that. Could you rephrase?";
     }
   }
 }
