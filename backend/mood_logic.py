@@ -1,36 +1,35 @@
-mood_keywords = {
-    "happy": ["happy", "joyful", "excited", "cheerful"],
-    "sad": ["sad", "down", "depressed", "blue"],
-    "bored": ["bored", "meh", "nothing to do"],
-    "anxious": ["anxious", "nervous", "worried"],
-    "romantic": ["romantic", "love", "in love"],
-    "angry": ["angry", "mad", "furious"]
-}
+import json
+import os
 
-response_keywords = {
-    "match": ["same", "match", "keep", "reflect"],
-    "shift": ["change", "shift", "different", "new"]
-}
+CONFIG_PATH = os.path.join(os.path.dirname(__file__), 'config.json')
+with open(CONFIG_PATH, 'r') as file:
+    config = json.load(file)
 
-recommendations = {
-    "happy": {"genre": "Comedy or Musical", "snack": "Cotton candy", "drink": "Soda", "game": "Charades"},
-    "sad": {"genre": "Feel-good or Animated", "snack": "Ice cream", "drink": "Hot chocolate", "game": "Story-building"},
-    "bored": {"genre": "Adventure or Mystery", "snack": "Chips", "drink": "Iced tea", "game": "Puzzle games"},
-    "anxious": {"genre": "Light comedy", "snack": "Cookies", "drink": "Herbal tea", "game": "Relaxing mobile game"},
-    "romantic": {"genre": "Romance or Drama", "snack": "Chocolate", "drink": "Wine", "game": "Couple quiz"},
-    "angry": {"genre": "Action or Thriller", "snack": "Spicy nuts", "drink": "Energy drink", "game": "Fighting game"}
-}
+mood_keywords = config["mood_keywords"]
+response_keywords = config["response_keywords"]
+recommendations = config["recommendations"]
 
 def detect_mood(message):
-    msg = message.lower()
+    message = message.lower()
     for mood, keywords in mood_keywords.items():
-        if any(kw in msg for kw in keywords):
+        if any(keywords in message for keywords in keywords):
             return mood
-    return None
+    return "fallback_soft"
 
 def detect_response_intent(message):
-    msg = message.lower()
+    message = message.lower()
     for intent, keywords in response_keywords.items():
-        if any(kw in msg for kw in keywords):
+        if any(keywords in message for keywords in keywords):
             return intent
-    return None
+    return "fallback_soft"
+
+def get_recommendation(mood):
+    return recommendations.get(mood, {})
+
+def intro_message():
+    return (
+        "Hey! I'm YARA, your personal movie planner\n"
+        "Tell me your mood and I’ll find the perfect movie — and if you're up for it, "
+        "I’ll suggest snacks, drinks, a theme, and even games.\n"
+        "So… how are you feeling?"
+    )

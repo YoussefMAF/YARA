@@ -1,0 +1,22 @@
+{
+    "mood_keywords": {
+        "happy" : ["happy", "joyful", "excited", "cheerful"],
+        "sad" : ["sad", "depressed", "unhappy", "downcast", "blue"],
+        "angry" : ["angry", "furious", "mad", "irritated", "enraged"],
+        "bored" : ["bored", "disinterested", "meh", "nothing to do", "uninterested"],
+        "anxious" : ["anxious", "nervous", "worried", "stressed", "uneasy"],
+        "romantic" : ["romantic", "loving", "affectionate", "passionate", "intimate"]
+    },
+    "response_keywords": {
+        "match" : ["same", "match", "similar"],
+        "shift" : ["change", "shift", "different"]
+    },
+    "recommendations": {
+    "happy": {"genre": "Comedy or Musical", "snack": "Cotton candy", "drink": "Soda", "game": "Charades"},
+    "sad": {"genre": "Feel-good or Animated", "snack": "Ice cream", "drink": "Hot chocolate", "game": "Story-building"},
+    "bored": {"genre": "Adventure or Mystery", "snack": "Chips", "drink": "Iced tea", "game": "Puzzle games"},
+    "anxious": {"genre": "Light comedy", "snack": "Cookies", "drink": "Herbal tea", "game": "Relaxing mobile game"},
+    "romantic": {"genre": "Romance or Drama", "snack": "Chocolate", "drink": "Wine", "game": "Couple quiz"},
+    "angry": {"genre": "Action or Thriller", "snack": "Spicy nuts", "drink": "Energy drink", "game": "Fighting game"}
+  }
+}
