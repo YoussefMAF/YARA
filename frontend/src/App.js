@@ -6,10 +6,8 @@ import MessageList from "./components/MessageList";
 import MessageInput from "./components/MessageInput";
 import './App.css';
 
-//address of backend server
 const SOCKET_SERVER_URL = "http://localhost:3001";
 
-//set up of chat state and socket connection
 export default function App() {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
@@ -54,7 +52,11 @@ export default function App() {
       id: Date.now() + Math.random(),
       sender,
       text,
-      timestamp: new Date().toLocaleTimeString(),
+      timestamp: new Date().toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      }),
     };
     setMessages((prev) => [...prev, newMessage]);
   };
@@ -75,7 +77,6 @@ export default function App() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  //chat window
   return (
     <div className="container mt-4">
       <ChatHeader />

@@ -12,7 +12,7 @@ const ChatWindow = () => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    const newSocket = io('http://localhost:3000');
+    const newSocket = io('http://localhost:3001');
     setSocket(newSocket);
 
     newSocket.on('botMessage', (message) => {
@@ -33,12 +33,21 @@ const ChatWindow = () => {
     };
   }, []);
 
+  const formatTime = () => {
+    const now = new Date();
+    return now.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  };
+
   const addMessage = (sender, text) => {
     const newMessage = {
       id: Date.now(),
       sender,
       text,
-      timestamp: new Date().toLocaleTimeString()
+      timestamp: formatTime()
     };
     setMessages(prev => [...prev, newMessage]);
   };

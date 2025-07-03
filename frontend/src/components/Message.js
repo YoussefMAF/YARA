@@ -2,16 +2,11 @@ import React from 'react';
 import './Message.css';
 
 const Message = ({ message }) => {
-  const isBot = message.sender === 'bot';
-  
   return (
-    <div className={`message ${isBot ? 'bot' : 'user'}`}>
-      <div className="message-content">
-        <strong>{isBot ? 'Bot' : 'You'}:</strong>
-        <span>{message.text}</span>
-      </div>
-      <div className="message-timestamp">
-        {message.timestamp}
+    <div className={`yara-message yara-message--${message.sender === 'bot' ? 'bot' : 'user'}`}>
+      <div className="yara-message__wrapper">
+        <div className="yara-message__content">{message.text}</div>
+        <div className="yara-message__time">{message.timestamp}</div>
       </div>
     </div>
   );
