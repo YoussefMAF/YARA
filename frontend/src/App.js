@@ -6,7 +6,7 @@ import MessageList from "./components/MessageList";
 import MessageInput from "./components/MessageInput";
 import './App.css';
 
-const SOCKET_SERVER_URL = "http://localhost:3001";
+const SOCKET_SERVER_URL = process.env.NODE_ENV === 'production' ? 'https://your-domain.com' : 'http://localhost:3000';
 
 export default function App() {
   const [messages, setMessages] = useState([]);
@@ -19,9 +19,23 @@ export default function App() {
     const socketInstance = io(SOCKET_SERVER_URL, {
       transports: ["websocket"],
       reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      timeout: 10000,
+      withCredentials: true,
+      autoConnect: true
+    });
+
+    socketInstance.on("connect", () => {
+      console.log("Connected to server");
+    });
+
+    socketInstance.on("connect_error", (err) => {
+      console.error("Socket connection failed:", err);
     });
 
     socketInstance.on("bot-message", (incomingMsg) => {
+      console.log("Received bot message:", incomingMsg);
       setIsTyping(false);
       addMessage("bot", incomingMsg);
     });
@@ -34,15 +48,12 @@ export default function App() {
       setIsTyping(false);
     });
 
-    socketInstance.on("connect_error", (err) => {
-      console.error("Socket connection failed:", err);
-    });
-
     socketRef.current = socketInstance;
 
     return () => {
       if (socketRef.current) {
-        socketRef.current.disconnect();
+        socketInstance.disconnect();
+        socketInstance.close();
       }
     };
   }, []);
@@ -62,13 +73,24 @@ export default function App() {
   };
 
   const sendMessage = (text) => {
-    const trimmed = (text !== undefined ? text : userInput).trim();
-    if (trimmed.length === 0) return;
-    addMessage("user", trimmed);
-    if (socketRef.current) {
-      socketRef.current.emit("user-message", trimmed);
+    const messageToSend = (text !== undefined ? text : userInput).trim();
+    if (messageToSend.length === 0) return;
+    
+    console.log("Sending message:", messageToSend);
+    addMessage("user", messageToSend);
+    
+    if (socketRef.current && socketRef.current.connected) {
+      console.log("Socket connected, emitting message");
+      socketRef.current.emit("user-message", messageToSend);
     } else {
-      console.warn("Tried to send message but socket wasn't ready");
+      console.error("Socket not connected or not ready");
+      if (socketRef.current) {
+        console.log("Socket state:", {
+          connected: socketRef.current.connected,
+          disconnected: socketRef.current.disconnected,
+          id: socketRef.current.id
+        });
+      }
     }
     setUserInput("");
   };
