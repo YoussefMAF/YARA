@@ -67,6 +67,9 @@ io.on("connection", (socket) => {
     conversationHistory: [],
     fallbackCount: 0
   });
+  
+  //Log initial step and mood state
+  console.log(`Starting conversation flow with user ${socket.id}: step 0 (${conversationFlow[0].id})`);
 
   // Welcome message
   socket.emit('bot-message', conversationFlow[0].question);
