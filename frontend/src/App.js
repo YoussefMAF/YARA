@@ -6,7 +6,7 @@ import MessageList from "./components/MessageList";
 import MessageInput from "./components/MessageInput";
 import './App.css';
 
-const SOCKET_SERVER_URL = process.env.NODE_ENV === 'production' ? 'https://your-domain.com' : 'http://localhost:3000';
+const SOCKET_SERVER_URL = process.env.NODE_ENV === 'production' ? 'https://your-domain.com' : 'http://localhost:3001';
 
 export default function App() {
   const [messages, setMessages] = useState([]);
