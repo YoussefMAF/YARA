@@ -1,33 +1,27 @@
-name: Deploy to Azure
-
-on:
-  push:
-    branches:
-      - main  # or change this to your default branch
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Log in to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
 
-      - name: Install dependencies
-        run: npm install
-        working-directory: frontend
+    - name: Install dependencies
+      working-directory: ./frontend
+      run: npm install
 
-      - name: Build project
-        run: npm run build
-        working-directory: frontend
+    - name: Build app
+      working-directory: ./frontend
+      run: npm run build
 
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: YARA
-          package: frontend/build
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: YARA
+        slot-name: Production
+        package: ./frontend
