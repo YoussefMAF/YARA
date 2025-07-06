@@ -219,7 +219,7 @@ app.get('*', (req, res) => {
 });
 
 // Start servers (tbf)
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 const HTTPS_PORT = process.env.HTTPS_PORT || 3443;
 
 httpServer.listen(PORT, () => {
