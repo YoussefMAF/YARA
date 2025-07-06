@@ -222,6 +222,6 @@ app.get('*', (req, res) => {
 const PORT = process.env.PORT || 3001;
 const HTTPS_PORT = process.env.HTTPS_PORT || 3443;
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
+server.listen(process.env.PORT || 3001, '0.0.0.0', () => {
+  console.log(`Server running on port ${process.env.PORT || 3001}`);
 });
