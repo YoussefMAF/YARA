@@ -58,4 +58,4 @@ jobs:
           app-name: 'YARA'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5EBCE82B9EBA430B88A7379C1BFBA862 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C9AC96ACB02D4396934D207C04A69F20 }}
