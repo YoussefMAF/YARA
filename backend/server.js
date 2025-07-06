@@ -222,7 +222,7 @@ app.get('*', (req, res) => {
 const PORT = process.env.PORT || 8080;
 const HTTPS_PORT = process.env.HTTPS_PORT || 3443;
 
-httpServer.listen(PORT, () => {
+httpServer.listen(PORT, '0.0.0.0', () => {
   console.log(`HTTP Server running on http://localhost:${PORT}`);
 });
 
